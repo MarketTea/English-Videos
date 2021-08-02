@@ -25,47 +25,46 @@ class _VideoPageState extends State<VideoPage> {
               child: Text('${snapshot.error}'),
             );
           } else if (snapshot.hasData) {
-            return GridView.count(
-              crossAxisCount: 2,
-              childAspectRatio: 1.0,
-              padding: const EdgeInsets.all(4.0),
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-              children: snapshot.data.map((video) {
-                return GestureDetector(
-                  child: Card(
-                    elevation: 1,
-                    color: Colors.white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: AutoSizeText(
-                            '${video.title}',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                          ),
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                      child: Column(
+                    children: [
+                      ListTile(
+                        leading: Image(
+                          width: 100.0,
+                          image: NetworkImage(snapshot.data[index].thumbUrl),
                         ),
-                        SizedBox(height: 8.0),
-                        Image(
-                          width: 150.0,
-                          image: NetworkImage(
-                            '${video.thumbUrl}',
-                          ),
+                        title: Text(
+                          snapshot.data[index].title,
+                          style: TextStyle(
+                              fontSize: 14.0, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    print('click here');
-                  },
-                );
-              }).toList(),
-            );
+                        subtitle: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 4.0,
+                              ),
+                              Text(snapshot.data[index].viewCount,
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.normal)),
+                              SizedBox(
+                                height: 4.0,
+                              ),
+                              Text('Time: ${snapshot.data[index].time}',
+                                  style: TextStyle(
+                                      fontSize: 11.0,
+                                      fontWeight: FontWeight.normal)),
+                            ]),
+                        onTap: () {},
+                      )
+                    ],
+                  ));
+                });
           } else {
             return Center(
               child: CircularProgressIndicator(),
